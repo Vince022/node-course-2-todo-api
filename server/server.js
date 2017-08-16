@@ -79,8 +79,10 @@ app.post('/users',(req,res) => {
     });
     //save instance in db
 
-    newUser.save().then((user) => {
-        res.send(user);
+    newUser.save().then(() => {
+             return newUser.generateAuthToken();
+    }).then((token) => {
+        res.header('x-auth', token).send(newUser);
     }).catch((e) => {
         res.status(400).send(e);
     })
